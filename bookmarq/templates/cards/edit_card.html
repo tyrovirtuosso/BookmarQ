@@ -1,0 +1,13 @@
+{% extends '_base.html' %}
+
+{% block content %}
+  <h1>Edit Card</h1>
+  
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Changes</button>
+  </form>
+  
+  <a href="{% url 'cards:card_detail' card.pk %}">Back to Card Detail</a>
+{% endblock %}

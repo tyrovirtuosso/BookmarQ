@@ -1,0 +1,47 @@
+{% block content %}
+
+<h2>{{ deck.deck_name }}</h2>
+<h3>{{ card.card_name }}</h3>
+{% if completion_time %}
+  <p>Completion Time: {{ completion_time }} seconds</p>
+{% else %}
+  <p id="timer">0.00</p>
+{% endif %}
+
+<form method="post" id="review-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="hidden" id="completion_time" name="completion_time" value="">
+  <button type="submit">Submit</button>
+</form>
+{% if feedback %}
+  <p>{{ feedback }}</p>
+  <p>{{ outcome }}</p>
+  <a href="{% url 'decks:review' deck.id %}">Next Card</a>
+{% elif answer_submitted %}
+  <p>Checking answer...</p>
+{% endif %}
+
+<script>
+  var startTime = new Date();
+  var timerElement = document.getElementById('timer');
+
+  var timerInterval = setInterval(function() {
+    var now = new Date();
+    var timeDiff = now - startTime; // in ms
+    // strip the ms
+    timeDiff /= 1000;
+
+    // get seconds 
+    var seconds = Math.round(timeDiff % 60);
+    // ensure that it has 2 decimal places
+    timerElement.textContent = seconds.toFixed(2);
+  }, 1000);
+
+  document.getElementById('review-form').addEventListener('submit', function() {
+    clearInterval(timerInterval);
+    document.getElementById('completion_time').value = timerElement.textContent;
+  });
+</script>
+
+{% endblock %}

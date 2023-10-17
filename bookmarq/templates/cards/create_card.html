@@ -1,0 +1,24 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<form id="cardForm" method="post">
+    {% csrf_token %}
+    <div>
+        <label for="{{ card_form.card_name.id_for_label }}">Card Name:</label>
+        {{ card_form.card_name }}
+    </div>
+    <button type="submit">Create Card</button>
+</form>
+
+<div id="validation-errors-card" style="color: red;">
+    {% if card_form.errors %}
+        {% for field, error_list in card_form.errors.items %}
+            {% for error in error_list %}
+                {{ error }}
+            {% endfor %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+{% endblock %}

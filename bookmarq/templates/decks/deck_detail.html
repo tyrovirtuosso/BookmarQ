@@ -1,0 +1,45 @@
+{% extends "_base.html" %}
+
+{% block content %}
+<h2>{{ deck.deck_name }}</h2>
+<ul>
+    {% for card in cards %}
+        <li data-id="{{ card.pk }}">
+        <a href="{% url 'cards:card_detail' card.pk %}" class="card_name">{{ card.card_name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'decks:deck_list' %}">Back to Deck List</a>
+
+
+<h3>Card Associations</h3>
+
+{% if not is_default_deck %}
+    <!-- Form to add a card to the deck -->
+    <form method="post" action="{% url 'decks:add_card_to_deck' deck.id %}">
+        {% csrf_token %}
+        <label for="add_card">Add Card:</label>
+        <select id="add_card" name="add_card">
+            {% for card in available_cards %}
+                <option value="{{ card.pk }}">{{ card.card_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add</button>
+    </form>
+{% endif %}
+
+<!-- List of cards in the deck with a form to remove each card -->
+<ul>
+    {% for card in deck.cards.all %}
+        <li>
+            {{ card.card_name }}
+            
+            <form method="post" action="{% url 'decks:remove_card_from_deck' deck.id card.pk %}">
+                {% csrf_token %}
+                <button type="submit">Remove</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

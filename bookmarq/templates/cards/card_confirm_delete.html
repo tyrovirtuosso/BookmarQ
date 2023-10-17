@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirm Delete Card</title>
+</head>
+<body>
+    <h1>Confirm Delete Card</h1>
+    <p>Are you sure you want to delete "{{ card.card_name }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Yes, Delete</button>
+    </form>
+    <a href="{% url 'cards:card_list' %}">Cancel</a>
+</body>
+</html>

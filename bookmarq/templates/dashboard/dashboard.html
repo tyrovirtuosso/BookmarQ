@@ -1,0 +1,30 @@
+{% extends '_base.html' %}
+
+{% block title %}Dashboard {% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <header>
+        <h1>Welcome, {{ display_name }}</h1>
+        <a href="{% url 'account_logout' %}">Logout</a>
+    </header>
+    <main>
+        <section class="quick-actions">
+            <h2>Quick Actions</h2>
+            <a href="{% url 'cards:create_card' %}">Create New Card</a>
+            <a href="{% url 'decks:deck_list' %}">View Decks</a>
+            <a href="{% url 'cards:card_list' %}">View Cards</a>
+
+        </section>
+        <section class="user-info">
+            <h2>User Information</h2>
+            <p>Email: {{ user.email }}</p>
+            <p>Last Login: {{ user.last_login }}</p>
+            <p>Date Joined: {{ user.date_joined }}</p>
+        </section>
+    </main>
+{% else %}
+    <p>You are not logged in</p>
+    <a href="{% url 'account_login' %}">Log In</a>
+{% endif %}
+{% endblock %}

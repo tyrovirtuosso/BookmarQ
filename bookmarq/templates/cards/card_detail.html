@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Card Detail</title>
+</head>
+<body>
+    {% load custom_filters %}
+    {% load markdown_extras %}
+    <h1>Card Detail</h1>
+
+    <div class="card-detail">
+        <h2>{{ card.card_name }}</h2>
+        
+        <div class="system-categories">
+            <h3>System Categories:</h3>
+            <ul>
+                {% for tag in card.system_defined_tags.all %}
+                    <li>{{ tag.tag_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="user-categories">
+            <h3>User Categories:</h3>
+            <ul>
+                {% for tag in card.user_defined_tags.all %}
+                    <li>{{ tag.tag_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="decks">
+            <h3>Associated Decks:</h3>
+            <ul>
+                {% for deck in card.decks.all %}
+                    <li>{{ deck.deck_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        
+        <div class="card-content-system">
+            <h3>Card Content System Generated:</h3>
+            <div class="markdown-content">
+                <p>{{ card.card_content_system_generated | markdown | safe }}</p>
+            </div>
+        </div>
+
+        <div class="card-content-user">
+            <h3>Card Content User Generated:</h3>
+            <div class="markdown-content">
+                <p>{{ card.card_content_user_generated | markdown | safe }}</p>
+            </div>
+        </div>
+
+        <div class="card-content-notes">
+            <h3>Notes:</h3>
+            <p>{{ card.notes }}</p>
+        </div>
+
+        <a href="{% url 'cards:edit_card' card.pk %}">Edit</a>
+
+
+
+    </div>
+
+
+    {% if card.decks.all|filter_exclude_default|length > 0 %}
+        <form method="post" action="{% url 'cards:bulk_delete_card' card.pk %}">
+            {% csrf_token %}
+            
+            <h3>Select Decks:</h3>
+            <ul>
+                {% for deck in card.decks.all|filter_exclude_default %}
+                    <li>
+                        <label>
+                            <input type="checkbox" name="decks" value="{{ deck.pk }}">
+                            {{ deck.deck_name }}
+                        </label>
+                    </li>
+                {% endfor %}
+            </ul>
+            
+            <h3>Deletion Options:</h3>
+            <label>
+                <input type="radio" name="deletion_option" value="all" checked>
+                Permanently Delete Card
+            </label>
+            <label>
+                <input type="radio" name="deletion_option" value="selected">
+                Delete only from selected Decks
+            </label>
+            
+            <button type="submit">Delete Card</button>
+        </form>
+    {% else %}
+        <p>Permanently Delete Card</p>
+        <form method="post" action="{% url 'cards:delete_card' card.pk %}">
+            {% csrf_token %}
+            <button type="submit">Delete Card</button>
+        </form>
+    {% endif %}
+
+    <!-- Add Card to Deck Form -->
+    <form method="post" action="{% url 'cards:add_card_to_deck' card.pk %}">
+        {% csrf_token %}
+        {{ add_form.as_p }}
+        <button type="submit">Add Card to Deck</button>
+    </form>
+
+    <!-- Remove Card from Deck Form -->
+    <form method="post" action="{% url 'cards:remove_card_from_deck' card.pk %}">
+        {% csrf_token %}
+        {{ remove_form.as_p }}
+        <button type="submit">Remove Card from Deck</button>
+    </form>
+
+    <a href="{% url 'cards:card_list' %}">Back to Card List</a>
+</body>
+</html>

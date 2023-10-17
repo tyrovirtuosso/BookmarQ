@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "bookmarq"
+version = "0.1.0"
+description = "BookmarQ is a user-friendly and efficient bookmark manager app designed to help you organize and access your favourite web links with ease."
+authors = ["tyrovirtuosso <tyrovirtuosso@proton.me>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^4.2.6"
+django-allauth = "^0.57.0"
+python-dotenv = "^1.0.0"
+django-extensions = "^3.2.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
